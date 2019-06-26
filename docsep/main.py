@@ -15,7 +15,7 @@ Document = namedtuple("Document", ["subdocuments", "name", "body"])
 def create_document(node):
     """ Creates a document """
     return Document(
-        subdocuments=[create_document(child) for child in node],
+        subdocuments={child.tag: create_document(child) for child in node},
         name=node.tag,
         body=node.text
     )
@@ -24,4 +24,4 @@ def parse(contents):
     """ Returns an array of documents to use """
     xml = '<?xml version="1.0" encoding="UTF-8" ?><document>"' + contents +  "</document>"
     document = ET.fromstring(xml)
-    return [create_document(child) for child in document]
+    return {child.tag: create_document(child) for child in document}
